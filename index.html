@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vinzz | Request Fitur</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      background-color: rgba(0, 0, 50, 0.4);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      animation: slideUp 1s ease;
+      width: 90%;
+      max-width: 500px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 10px;
+      animation: fadeIn 1.5s ease;
+    }
+    p {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #ccc;
+      animation: fadeIn 2s ease;
+    }
+    textarea {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      resize: none;
+      font-size: 16px;
+      margin-bottom: 15px;
+      background-color: #1b2b3a;
+      color: #fff;
+      animation: fadeInUp 2s ease;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: fadeInUp 2.5s ease;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #00c6ff;
+    }
+    #status {
+      text-align: center;
+      margin-top: 15px;
+      color: #00ffea;
+      animation: fadeIn 2.5s ease;
+    }
+
+    /* Animations */
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🛠️ Request Fitur</h1>
+    <p>Kirim ide atau fitur yang ingin kamu tambahkan ke bot Vinzz</p>
+
+    <textarea id="fitur" rows="6" placeholder="Tulis fitur yang kamu inginkan di sini..."></textarea>
+    <button onclick="kirimRequest()">Kirim Sekarang</button>
+    <div id="status"></div>
+  </div>
+
+  <script src="sistem.js"></script>
+  <script>
+    function kirimRequest() {
+      const fitur = document.getElementById('fitur').value.trim();
+      const status = document.getElementById('status');
+
+      if (!fitur) {
+        status.innerText = '❗ Harap isi fitur yang ingin direquest.';
+        return;
+      }
+
+      const pesan = `🆕 *Request Fitur Baru*\n\n💡 *Isi:* ${fitur}`;
+
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: pesan,
+          parse_mode: 'Markdown'
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          status.innerText = '✅ Request berhasil dikirim!';
+          document.getElementById('fitur').value = '';
+        } else {
+          status.innerText = '❌ Gagal mengirim request.';
+        }
+      })
+      .catch(() => {
+        status.innerText = '❌ Terjadi kesalahan.';
+      });
+    }
+  </script>
+</body>
+</html>
